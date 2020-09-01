@@ -49,7 +49,6 @@ export class RENDERER {
         this.addParticleGeometry()
         this.initControls()
         this.render()
-        window.addEventListener('mousemove', this.onMouseMove)
     }
 
     render = () => {
@@ -91,18 +90,6 @@ export class RENDERER {
         if (element) element.appendChild(this.renderer.domElement)
     }
 
-    addLights = () => {
-        let light = new THREE.PointLight(0xFFFFFF, 1, 1000)
-        light.position.set(0,0,-150)
-        light.castShadow = true
-        this.scene.add(light)
-
-        light = new THREE.PointLight(0xFFFFFF, 2, 0)
-        light.position.set(0,0,150)
-        light.castShadow = true
-        this.scene.add(light)
-    }
-
     initControls = () => {
         this.controls.enableDamping = true
         this.controls.dampingFactor = 0.25
@@ -111,25 +98,6 @@ export class RENDERER {
 
         this.controls.minPolarAngle = 0;
         this.controls.maxPolarAngle = Math.PI / 2;
-    }
-
-    addObjects = () => {
-        let geometry = new THREE.SphereGeometry(.1, 9, 9)
-        let material = new THREE.MeshLambertMaterial({color: 0xf7f7f7 })
-
-        for (let x=-50; x<50; x++) {
-            for (let y=-50; y<50; y++) {
-                // for (let z=-10; z<0; z++) {
-                let mesh = new THREE.Mesh(geometry, material)
-                    mesh.position.x = (x)*2
-                    mesh.position.y = (y)*2
-                    // mesh.position.z = (z)*10
-                    mesh.position.z = 0
-                    this.objects.push(mesh)
-                    this.scene.add(mesh)
-                // }
-            }
-        }
     }
 
     addParticleGeometry = () => {
@@ -144,24 +112,5 @@ export class RENDERER {
         }
         this.particleCloud = new Points(this.particleGeometry, this.material)
         this.scene.add(this.particleCloud)
-    }
-
-    onMouseMove = (event: MouseEvent) => {
-        event.preventDefault();
-
-        this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-        this.raycaster.setFromCamera(this.mouse, this.camera);
-
-        const intersects = this.raycaster.intersectObjects(this.scene.children, true);
-        console.log(intersects)
-        for (let i=0; i < intersects.length; i++) {
-            // let tl = new TimelineMax().delay(.3)
-            // tl.to(intersects[i].object.scale, 2, {x: 3, ease: Expo.easeOut})
-            // tl.to(intersects[i].object.scale, 2, {y: 3, ease: Expo.easeOut}, "=-2")
-            // tl.to(intersects[i].object.scale, 2, {x: 1, ease: Expo.easeOut}, "=2")
-            // tl.to(intersects[i].object.scale, 2, {y: 1, ease: Expo.easeOut}, "=-2")
-        }
     }
 }
